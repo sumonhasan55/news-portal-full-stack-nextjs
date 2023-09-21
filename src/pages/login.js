@@ -5,7 +5,28 @@ import styles from "@/styles/Login.module.css";
 import RootLayout from "@/components/Layouts/RootLayout";
 import { signIn } from "next-auth/react";
 import Link from "next/link";
+import { useForm } from "react-hook-form";
+import auth from "@/firebase/firebase.auth";
+import { useCreateUserWithEmailAndPassword } from 'react-firebase-hooks/auth';
+
+
+
 const LoginPage = () => {
+
+
+  const [
+    createUserWithEmailAndPassword,
+    user,
+    loading,
+    error,
+  ] = useCreateUserWithEmailAndPassword(auth);
+  console.log(user)
+
+  const { register, handleSubmit, watch, formState: { errors } } = useForm();
+  const onSubmit = (data) => {
+    createUserWithEmailAndPassword(data.email,data.password)
+  };
+
   return (
     <div>
       <Head>
@@ -22,12 +43,12 @@ const LoginPage = () => {
           })}/>
         </div>
         <hr />
-        <form>
+        <form onSubmit={handleSubmit(onSubmit)}>
           <label htmlFor="">Your Email</label>
-          <input type="email" />
+          <input {...register("email", { required: true })} type="email" />
           <label htmlFor="">Your Password</label>
-          <input type="password" />
-          <Button>Login</Button><br></br>
+          <input {...register("password", { required: true })}  type="password" />
+          <button type="submit">Login</button><br></br>
           <Link href="/signup">Create a new Account!</Link>
         </form>
       </div>

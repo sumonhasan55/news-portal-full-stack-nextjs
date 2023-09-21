@@ -13,11 +13,17 @@ const { Header, Content, Footer } = Layout;
 import styles from "@/styles/Home.module.css";
 import Link from "next/link";
 import { useSession, signIn, signOut } from "next-auth/react"
+import auth from "@/firebase/firebase.auth";
+import { useAuthState } from "react-firebase-hooks/auth";
+
+  
 
 const RootLayout = ({ children }) => {
 
+  const [user, loading, error] = useAuthState(auth);
   const { data: session } = useSession()
-  console.log(session)
+  //console.log(session)
+  //console.log(user)
 
   return (
     <Layout>
